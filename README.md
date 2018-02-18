@@ -5,7 +5,7 @@ Offers a way to combine objects without copying values around. Its is usefull wh
 > Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern Browsers. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
 
 
-### ScopeChain(`Object level`, `Object parent` [, ...`Object parent`])
+### ScopeChain(`Object level`, ...`Object parent`)
 
   `level` Object to use a base level
   
