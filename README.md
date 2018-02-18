@@ -9,10 +9,11 @@ Offers a way to combine objects without copying values around. Its is usefull wh
 
 ### ScopeChain(`Object level`, `Object parent` [, ...`Object parent`])
 
-  `level` 
+  `level` Object to use a base level
+  
   `parent`at least one Object that acts as parent 
 
-#### Proxy Traps
+### Proxy Traps
 All traps will use the level object first and then start ascending the parents. The `set` and `prototypeOf` traps will use the level object only.
 
 ## Examples
@@ -43,7 +44,5 @@ sc1.global //value
 
 sc3.fubar //bar
 sc3.id //level
-
-
 
 ```
