@@ -1,11 +1,9 @@
-# scopeChain
+# ScopeChain
 
 Offers a way to combine objects without copying values around. Its is usefull when using immutables or if you want to restrict object access.
 
-> Caution this method uses a [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and there for will only work in modern Browsers.
+> Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern Browsers. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
 
-
-## Methods
 
 ### ScopeChain(`Object level`, `Object parent` [, ...`Object parent`])
 
@@ -16,7 +14,7 @@ Offers a way to combine objects without copying values around. Its is usefull wh
 ### Proxy Traps
 All traps will use the level object first and then start ascending the parents. The `set` and `prototypeOf` traps will use the level object only.
 
-## Examples
+### Examples
 
 ```javascript
 var p1 = {
