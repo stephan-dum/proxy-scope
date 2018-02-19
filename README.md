@@ -44,3 +44,9 @@ sc3.fubar //bar
 sc3.id //level
 
 ```
+
+## Licence
+
+Public Domain
+
+NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
