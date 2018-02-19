@@ -43,15 +43,13 @@ function ScopeChain(level, ...parents) {
 				}))
 			);
 		},
-		set(target, property, value) {
-			level[property] = value;
-			
-			return true;
+		set(target, property, value, receiver) {
+			return Reflect.set(target, property, value, receiver);
 		},
 		has(target, property) {
 			return property in level || parents.some(function(parent) {
 				return property in parent;
-			});;
+			});
 		},
 		getPrototypeOf(target) {
 			return Object.getPrototypeOf(level);
