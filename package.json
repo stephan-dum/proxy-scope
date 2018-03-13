@@ -1,0 +1,26 @@
+{
+  "name": "proxyscope",
+  "version": "1.0.0",
+  "description": "combine objects without copying values",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephan-dum/proxyscope.git"
+  },
+  "keywords": [
+    "proxy",
+    "immutable",
+    "variable",
+    "scope",
+    "ES6"
+  ],
+  "author": "Stephan Dum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephan-dum/proxyscope/issues"
+  },
+  "homepage": "https://github.com/stephan-dum/proxyscope#readme"
+}
