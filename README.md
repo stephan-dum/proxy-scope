@@ -17,6 +17,9 @@ All traps will use the level object first and then start ascending the parents. 
 ### Examples
 
 ```javascript
+
+import ProxyScope from 'lib/proxyscope/index.js';
+
 var p1 = {
   "id" : "p1",
   "global" : "value"
