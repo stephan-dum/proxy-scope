@@ -1,6 +1,6 @@
 {
   "name": "proxyscope",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "combine objects without copying values",
   "main": "index.js",
   "scripts": {

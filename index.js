@@ -1,4 +1,4 @@
-export function ProxyScope(level, ...parents) {
+export default function ProxyScope(level, ...parents) {
 	return new Proxy(level, {
 		get(target, property) {
 			if(property in level) {
