@@ -1,4 +1,4 @@
-function ScopeChain(level, ...parents) {
+export function ProxyScope(level, ...parents) {
 	return new Proxy(level, {
 		get(target, property) {
 			if(property in level) {
