@@ -4,7 +4,7 @@ export default function ProxyScope(level, ...parents) {
 			if(property in level) {
 				return level[property];
 			}
-			
+
 			for(var i = 0; i < parents.length; i++) {
 				if(parents[i][property]) {
 					return parents[i][property];
@@ -15,18 +15,18 @@ export default function ProxyScope(level, ...parents) {
 			var desc = (
 				Object.getOwnPropertyDescriptor(target, prop)
 			);
-			
+
 			if(desc) {
 				return desc;
 			}
-			
+
 			var obj = parents.find(function(obj) {
 				return prop in obj;
 			});
-			
+
 			if(obj) {
 				var desc = Object.getOwnPropertyDescriptor(obj, prop);
-	  
+
 				if(desc) {
 					return desc;
 				}

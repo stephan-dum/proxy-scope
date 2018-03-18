@@ -1,10 +1,12 @@
 {
-  "name": "proxyscope",
-  "version": "1.0.1",
+  "name": "@aboutweb/proxyscope",
+  "version": "1.0.0",
   "description": "combine objects without copying values",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine",
+    "build": "node ./webpack/task/build.js",
+    "watch": "node ./webpack/task/watch.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/stephan-dum/proxyscope/issues"
   },
-  "homepage": "https://github.com/stephan-dum/proxyscope#readme"
+  "homepage": "https://github.com/stephan-dum/proxyscope#readme",
+  "devDependencies": {
+    "webpack": "^4"
+  }
 }

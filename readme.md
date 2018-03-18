@@ -8,8 +8,8 @@ Offers a way to combine objects without copying values around. Its is usefull wh
 ### ProxyScope(`Object level`, ...`Object parent`)
 
   `level` Object to use a base level
-  
-  `parent`at least one Object that acts as parent 
+
+  `parent`at least one Object that acts as parent
 
 ### Proxy Traps
 All traps will use the level object first and then start ascending the parents. The `set` and `prototypeOf` traps will use the level object only.
