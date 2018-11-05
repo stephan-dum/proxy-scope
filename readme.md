@@ -8,12 +8,13 @@ A way to aggregate objects by referances which will also reflect changes made to
 
 ## ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
 `traps` chain of traps merged for the new Proxy
+
 `target` this will extended the proxy target created later on
 
 returns a `factory` function
 
 ### Example
-``` JavaScript
+```javascript
 
 import { default as proxyFactory } from "@aboutweb/proxyscope";
 import otherFactory from "./otherfactory.js";
@@ -52,11 +53,13 @@ export {
 
 ## factory(`Object target | Array<Object> target`, `Array<traps>`)
 `target` an object with a stack property or an Array of levels
+
 `traps` chain of traps tho merge
 
 
-## proxyRead
+## ProxyScope.read
 Looks up properties in the level chain if a property could not be found.
+
 Will only set properties on the root level.
 
 ### Example
@@ -81,7 +84,7 @@ someFn({
 
 ```
 
-## proxyWrite
+## ProxyScope.write
   same as proxyRead but will also forward writes if they are defined somewhere in the level chain.
 
 ### Example
@@ -103,7 +106,7 @@ expect(l2.fu).to.equal("hallo");
 
 ```
 
-## proxyReadDeep
+## ProxyScope.readDeep
   read even nested objects
 
 > Use wisely, because this will create a proxy for every property lookup that has more then one possible value. Therefor it is recommended to cache lookups when possible.
@@ -145,7 +148,7 @@ expect(nested.deep).to.equal(true);
 
 ```
 
-## proxyWriteDeep
+## ProxyScope.writeDeep
   same as proxyReadDeep, but will also write to nested objects
 
 
