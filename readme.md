@@ -13,6 +13,12 @@ A way to aggregate objects by referances which will also reflect changes made to
 
 returns a `factory` function
 
+
+### factory(`Object target | Array<Object> target`, `Array<traps>`)
+`target` an object with a stack property or an Array of levels
+
+`traps` chain of traps tho merge
+
 ### Example
 ```javascript
 
@@ -51,16 +57,8 @@ export {
 
 ```
 
-## factory(`Object target | Array<Object> target`, `Array<traps>`)
-`target` an object with a stack property or an Array of levels
-
-`traps` chain of traps tho merge
-
-
 ## ProxyScope.read
-Looks up properties in the level chain if a property could not be found.
-
-Will only set properties on the root level.
+Uses the `target.stack` to look up properties.
 
 ### Example
 
