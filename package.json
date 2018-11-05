@@ -1,6 +1,6 @@
 {
   "name": "@aboutweb/proxyscope",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "combine objects by reference",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
