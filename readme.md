@@ -44,7 +44,7 @@ const target = {
     if(root === true) {
       return this.stack[0];
     }
-	}
+  }
 }
 
 const factory = proxyFactory([traps, otherfactory], target);
