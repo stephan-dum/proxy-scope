@@ -7,77 +7,77 @@ A way to aggregate objects by referances which will also reflect changes made to
 
 
 ## ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
-  `traps` chain of traps merged for the new Proxy
-  `target` this will extended the proxy target created later on
+`traps` chain of traps merged for the new Proxy
+`target` this will extended the proxy target created later on
 
-  returns a `factory` function
+returns a `factory` function
 
 ### Example
 ``` JavaScript
 
-  import { default as proxyFactory } from "@aboutweb/proxyscope";
-  import otherFactory from "./otherfactory.js";
+import { default as proxyFactory } from "@aboutweb/proxyscope";
+import otherFactory from "./otherfactory.js";
 
-  const traps = {
-    has(target, property, receiver) {
-      return target.findHost(property);
+const traps = {
+  has(target, property, receiver) {
+    return target.findHost(property);
+  }
+}
+
+const target = {
+  findHost(property, root) {
+    let host = this.stack.find(function(level) {
+      return property in level;
+    });
+
+    if(host) {
+      return host;
     }
-  }
 
-  const target = {
-    findHost(property, root) {
-  		let host = this.stack.find(function(level) {
-  			return property in level;
-  		});
+    if(root === true) {
+      return this.stack[0];
+    }
+	}
+}
 
-  		if(host) {
-  			return host;
-  		}
+const factory = proxyFactory([traps, otherfactory], target);
 
-  		if(root === true) {
-  			return this.stack[0];
-  		}
-  	}
-  }
-
-  const factory = proxyFactory([traps, otherfactory], target);
-
-  export {
-  	factory as default,
-  	target,
-  	traps
-  }
+export {
+  factory as default,
+  target,
+  traps
+}
 
 ```
 
 ## factory(`Object target | Array<Object> target`, `Array<traps>`)
-  `target` an object with a stack property or an Array of levels
-  `traps` chain of traps tho merge
+`target` an object with a stack property or an Array of levels
+`traps` chain of traps tho merge
 
 
 ## proxyRead
-  lookups properties in the level chain if a property could not be found.
-  will only set properties on the root level.
+Looks up properties in the level chain if a property could not be found.
+Will only set properties on the root level.
 
 ### Example
 
 ```javascript
-  import { read as proxyRead } from "@aboutweb/proxyscope";
+import { read as proxyRead } from "@aboutweb/proxyscope";
 
-  let defaultConfig = {
-    fu : "bar"
-  }
+let defaultConfig = {
+  fu : "bar"
+}
 
-  function someFn(config) {
-    let proxy = proxyRead(config, defaultConfig);
+function someFn(config) {
+  let proxy = proxyRead(config, defaultConfig);
 
-    expect(proxy.fu).to.equal("bar");
-    expect(proxy.bar).to.equal("baz");
-  }
+  expect(proxy.fu).to.equal("bar");
+  expect(proxy.bar).to.equal("baz");
+}
 
-  someFn({
-    bar : "baz"
-  });
+someFn({
+  bar : "baz"
+});
 
 ```
 
@@ -87,19 +87,19 @@ A way to aggregate objects by referances which will also reflect changes made to
 ### Example
 
 ```javascript
-  const l1 = {
-    some : "value"
-  }
+const l1 = {
+  some : "value"
+}
 
-  const l2 = {
-    fu : "bar"
-  }
+const l2 = {
+  fu : "bar"
+}
 
-  let proxy = proxyWrite(l1, l2);
+let proxy = proxyWrite(l1, l2);
 
-  proxy.fu = "hallo";
+proxy.fu = "hallo";
 
-  expect(l2.fu).to.equal("hallo");
+expect(l2.fu).to.equal("hallo");
 
 ```
 
@@ -111,37 +111,37 @@ A way to aggregate objects by referances which will also reflect changes made to
 ### Example
 ```javascript
 
-  import { readDeep as proxyReadDeep } from "@aboutweb/proxyscope";
+import { readDeep as proxyReadDeep } from "@aboutweb/proxyscope";
 
-  const l1 = {
-    nested : {
-      some : "value",
-    }
+const l1 = {
+  nested : {
+    some : "value",
   }
+}
 
-  const l2 = {
-    nested : {
-      fu : "bar"
-    }
+const l2 = {
+  nested : {
+    fu : "bar"
   }
+}
 
-  const l3 = {
-    other : true
-  }
+const l3 = {
+  other : true
+}
 
-  let proxy = proxyReadDeep(l1, l2, l3);
+let proxy = proxyReadDeep(l1, l2, l3);
 
-  //before caching or update cache afterwords
-  l3.nested = {
-    deep : true
-  }
+//before caching or update cache afterwords
+l3.nested = {
+  deep : true
+}
 
-  //cache the returned proxy
-  let nested = proxy.nested;
+//cache the returned proxy
+let nested = proxy.nested;
 
-  expect(nested.some).to.equal("value");
-  expect(nested.fu).to.equal("bar");
-  expect(nested.deep).to.equal(true);
+expect(nested.some).to.equal("value");
+expect(nested.fu).to.equal("bar");
+expect(nested.deep).to.equal(true);
 
 ```
 
@@ -152,30 +152,30 @@ A way to aggregate objects by referances which will also reflect changes made to
 ### Example
 ```javascript
 
-  import { writeDeep as proxyWriteDeep } from "@aboutweb/proxyscope";
+import { writeDeep as proxyWriteDeep } from "@aboutweb/proxyscope";
 
-  const l1 = {
-    nested : {
-      some : "value",
-    }
+const l1 = {
+  nested : {
+    some : "value",
   }
+}
 
-  const l2 = {
-    nested : {
-      fu : "bar"
-    }
+const l2 = {
+  nested : {
+    fu : "bar"
   }
+}
 
-  let proxy = proxyReadDeep(l1, l2);
+let proxy = proxyReadDeep(l1, l2);
 
-  //also use cache where possible
-  let nested = proxy.nested;
+//also use cache where possible
+let nested = proxy.nested;
 
-  nested.some = "other";
-  nested.fu = "baz";
+nested.some = "other";
+nested.fu = "baz";
 
-  expect(l1.nested.some).to.equal("other");
-  expect(l2.nested.fu).to.equal("baz");
+expect(l1.nested.some).to.equal("other");
+expect(l2.nested.fu).to.equal("baz");
 
 ```
 
