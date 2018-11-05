@@ -1,50 +1,181 @@
 # ProxyScope
 
-Offers a way to combine objects without copying values around. Its is usefull when using immutables or if you want to restrict object access.
-
-> Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern Browsers. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
+A way to aggregate objects by referances which will also reflect changes made to the original objects. This is usefull when using immutables or mixins.
 
 
-### ProxyScope(`Object level`, ...`Object parent`)
+> Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
 
-  `level` Object to use a base level
 
-  `parent`at least one Object that acts as parent
+## ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
+  `traps` chain of traps merged for the new Proxy
+  `target` this will extended the proxy target created later on
 
-### Proxy Traps
-All traps will use the level object first and then start ascending the parents. The `set` and `prototypeOf` traps will use the level object only.
+  returns a `factory` function
 
-### Examples
+### Example
+``` JavaScript
+
+  import { default as proxyFactory } from "@aboutweb/proxyscope";
+  import otherFactory from "./otherfactory.js";
+
+  const traps = {
+    has(target, property, receiver) {
+      return target.findHost(property);
+    }
+  }
+
+  const target = {
+    findHost(property, root) {
+  		let host = this.stack.find(function(level) {
+  			return property in level;
+  		});
+
+  		if(host) {
+  			return host;
+  		}
+
+  		if(root === true) {
+  			return this.stack[0];
+  		}
+  	}
+  }
+
+  const factory = proxyFactory([traps, otherfactory], target);
+
+  export {
+  	factory as default,
+  	target,
+  	traps
+  }
+
+```
+
+## factory(`Object target | Array<Object> target`, `Array<traps>`)
+  `target` an object with a stack property or an Array of levels
+  `traps` chain of traps tho merge
+
+
+## proxyRead
+  lookups properties in the level chain if a property could not be found.
+  will only set properties on the root level.
+
+### Example
 
 ```javascript
+  import { read as proxyRead } from "@aboutweb/proxyscope";
 
-import ProxyScope from 'lib/proxyscope/index.js';
+  let defaultConfig = {
+    fu : "bar"
+  }
 
-var p1 = {
-  "id" : "p1",
-  "global" : "value"
-};
+  function someFn(config) {
+    let proxy = proxyRead(config, defaultConfig);
 
-var p2 = {
-  "id" : "p2",
-  "fu" : "bla"
-};
+    expect(proxy.fu).to.equal("bar");
+    expect(proxy.bar).to.equal("baz");
+  }
 
-var level = {
-  id : "level",
-  "fu" : "bar"
-};
+  someFn({
+    bar : "baz"
+  });
 
-var sc1 = ProxyScope(p1, p2);
-var sc2 = ProxyScope(level, sc2); //nested
-var sc3 = ProxyScope(level, p1, p2); //the same as sc2
+```
 
-sc1.id //p1
-sc1.fu //bla
-sc1.global //value
+## proxyWrite
+  same as proxyRead but will also forward writes if they are defined somewhere in the level chain.
 
-sc3.fubar //bar
-sc3.id //level
+### Example
+
+```javascript
+  const l1 = {
+    some : "value"
+  }
+
+  const l2 = {
+    fu : "bar"
+  }
+
+  let proxy = proxyWrite(l1, l2);
+
+  proxy.fu = "hallo";
+
+  expect(l2.fu).to.equal("hallo");
+
+```
+
+## proxyReadDeep
+  read even nested objects
+
+> Use wisely, because this will create a proxy for every property lookup that has more then one possible value. Therefor it is recommended to cache lookups when possible.
+
+### Example
+```javascript
+
+  import { readDeep as proxyReadDeep } from "@aboutweb/proxyscope";
+
+  const l1 = {
+    nested : {
+      some : "value",
+    }
+  }
+
+  const l2 = {
+    nested : {
+      fu : "bar"
+    }
+  }
+
+  const l3 = {
+    other : true
+  }
+
+  let proxy = proxyReadDeep(l1, l2, l3);
+
+  //before caching or update cache afterwords
+  l3.nested = {
+    deep : true
+  }
+
+  //cache the returned proxy
+  let nested = proxy.nested;
+
+  expect(nested.some).to.equal("value");
+  expect(nested.fu).to.equal("bar");
+  expect(nested.deep).to.equal(true);
+
+```
+
+## proxyWriteDeep
+  same as proxyReadDeep, but will also write to nested objects
+
+
+### Example
+```javascript
+
+  import { writeDeep as proxyWriteDeep } from "@aboutweb/proxyscope";
+
+  const l1 = {
+    nested : {
+      some : "value",
+    }
+  }
+
+  const l2 = {
+    nested : {
+      fu : "bar"
+    }
+  }
+
+  let proxy = proxyReadDeep(l1, l2);
+
+  //also use cache where possible
+  let nested = proxy.nested;
+
+  nested.some = "other";
+  nested.fu = "baz";
+
+  expect(l1.nested.some).to.equal("other");
+  expect(l2.nested.fu).to.equal("baz");
 
 ```
 
