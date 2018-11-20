@@ -9,12 +9,11 @@
 		traps
 			default traps to push to trapChain
 
-	args
-		stack
-			a spread or array of level objects
-		trapChain
-			a spread of traps objects
-			if stack is a spread this will be an empty array
+	@param target
+		a spread or array of level objects
+	@param trapChain
+		a spread of traps objects
+		if target is a spread this will be an empty array
 */
 
 function createProxy(target, ...trapChain) {
@@ -59,7 +58,6 @@ function createProxy(target, ...trapChain) {
 /**
 	Creates factory for generation Proxies
 
-
 	@param { String | String[] } trapChain
 	@param { Object } [target = {}] can be used to extend the later proxy target
 */
@@ -95,7 +93,7 @@ function proxyFactory(trapChain, target = {}) {
 
 const traps = Object.freeze({
 	set(target, property, value) {
-		target.stack[0][property] = value;
+		return target.stack[0][property] = value;
 	},
 	get(target, property) {
 		var host = target.findHost(property);

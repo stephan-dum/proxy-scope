@@ -2,7 +2,7 @@ import proxyFactory from './proxyfactory.js';
 
 const traps = Object.freeze({
 	set(target, property, value) {
-		target.stack[0][property] = value;
+		return target.stack[0][property] = value;
 	},
 	get(target, property) {
 		var host = target.findHost(property);
