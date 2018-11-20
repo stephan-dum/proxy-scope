@@ -6,7 +6,7 @@ A way to aggregate objects by referances which will also reflect changes made to
 > Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
 
 
-## ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
+### ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
 `traps` chain of traps merged for the new Proxy
 
 `target` this will extended the proxy target created later on
