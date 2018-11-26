@@ -1,91 +1,42 @@
-/**
-	@module proxyFactory
-*/
-/**
-	generates trap handlers by merging properties from trapChain to trapChain[0]
-	or if the trapchain[0] is not extensible to an empty object.
 
-	context
-		traps
-			default traps to push to trapChain
-
-	@param target
-		a spread or array of level objects
-	@param trapChain
-		a spread of traps objects
-		if target is a spread this will be an empty array
-*/
-
-function createProxy(target, ...trapChain) {
-	let stack = target.stack;
-
-	if(!stack) {
-		stack = target;
-		target = {};
-
-		if(!Array.isArray(stack)) {
-			stack = Array.from(arguments);
-			trapChain = [];
-		}
-
-		target.stack = stack;
+function createProxy(stack, ...trapChain) {
+	if(!Array.isArray(stack)) {
+		stack = Array.from(arguments);
+		trapChain = [];
 	}
 
-	Object.assign(target, this.target);
+	let target = stack[0];
+	let handler = { stack };
 
-	if(this.traps) {
-		trapChain.push(...this.traps);
-	}
-
-	let traps = (
-		Object.isExtensible(trapChain[0])
-			?trapChain.shift()
-			:{}
-	);
+	trapChain.push(...this.traps);
 
 	trapChain.forEach(function(levelTraps) {
 		Object.getOwnPropertyNames(levelTraps).forEach(function(property) {
-			if(!traps.hasOwnProperty(property)) {
-				Object.defineProperty(traps, property, Object.getOwnPropertyDescriptor(levelTraps, property));
+			if(!handler.hasOwnProperty(property)) {
+				Object.defineProperty(handler, property, Object.getOwnPropertyDescriptor(levelTraps, property));
 			}
 		});
 	});
 
-	return new Proxy(target, traps)
+	return new Proxy(target, handler)
 }
 
-/**
-	Creates factory for generation Proxies
-
-	@param { String | String[] } trapChain
-	@param { Object } [target = {}] can be used to extend the later proxy target
-*/
-
-function proxyFactory(trapChain, target = {}) {
-	if(!Array.isArray(trapChain)) {
-		trapChain = [trapChain];
-	}
-
-	let _traps = [];
+function proxyFactory(...trapChain) {
+	let traps = [];
 
 	trapChain.forEach(function(factory) {
-		if(factory.target) {
-			Object.assign(target, factory.target);
-		}
 		if(factory.traps) {
-			_traps.push(...factory.traps);
+			traps.push(...factory.traps);
 		} else {
-			_traps.push(factory);
+			traps.push(factory);
 		}
 	});
 
 	let factory = createProxy.bind({
-		traps : _traps,
-		target
+		traps : traps
 	});
 
-	factory.target = target;
-	factory.traps = _traps;
+	factory.traps = traps;
 
 	return factory;
 }

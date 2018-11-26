@@ -11,18 +11,18 @@ Bootstrap for combining object be reference with ES proxy, and reusing them on o
 > Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
 
 
-### ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
+### ProxyFactory(`...(traps || factory))
 `traps` chain of traps merged for the new Proxy
 
-`target` this will extended the proxy target created later on
+`factory` a previous created factory
 
-returns a `factory` function
+returns a `factory` function with a `traps` property
 
 
-### factory(`Object target | Array<Object> target`, `Array<traps>`)
-`target` an object with a stack property or an Array of levels
+### factory(`Object target | Array<Object target>`, `...traps`)
+`target` an object or array of object to use as stack for lookups
 
-`traps` chain of traps tho merge
+`traps` to combine while creating a new proxy
 
 ### Example
 ```javascript
@@ -32,11 +32,9 @@ import otherFactory from "./otherfactory.js";
 
 const traps = {
   has(target, property, receiver) {
-    return target.findHost(property);
-  }
-}
-
-const target = {
+    return this.findHost(property);
+  },
+  /*helper method*/
   findHost(property, root) {
     let host = this.stack.find(function(level) {
       return property in level;
@@ -52,11 +50,10 @@ const target = {
   }
 }
 
-const factory = proxyFactory([traps, otherfactory], target);
+const factory = proxyFactory(traps, otherfactory);
 
 export {
   factory as default,
-  target,
   traps
 }
 

@@ -4,111 +4,61 @@
 	(factory((global.proxyScope = {})));
 }(this, (function (exports) { 'use strict';
 
-	/**
-		@module proxyFactory
-	*/
-	/**
-		generates trap handlers by merging properties from trapChain to trapChain[0]
-		or if the trapchain[0] is not extensible to an empty object.
-
-		context
-			traps
-				default traps to push to trapChain
-
-		@param target
-			a spread or array of level objects
-		@param trapChain
-			a spread of traps objects
-			if target is a spread this will be an empty array
-	*/
-
-	function createProxy(target, ...trapChain) {
-		let stack = target.stack;
-
-		if(!stack) {
-			stack = target;
-			target = {};
-
-			if(!Array.isArray(stack)) {
-				stack = Array.from(arguments);
-				trapChain = [];
-			}
-
-			target.stack = stack;
+	function createProxy(stack, ...trapChain) {
+		if(!Array.isArray(stack)) {
+			stack = Array.from(arguments);
+			trapChain = [];
 		}
 
-		Object.assign(target, this.target);
+		let target = stack[0];
+		let handler = { stack };
 
-		if(this.traps) {
-			trapChain.push(...this.traps);
-		}
-
-		let traps = (
-			Object.isExtensible(trapChain[0])
-				?trapChain.shift()
-				:{}
-		);
+		trapChain.push(...this.traps);
 
 		trapChain.forEach(function(levelTraps) {
 			Object.getOwnPropertyNames(levelTraps).forEach(function(property) {
-				if(!traps.hasOwnProperty(property)) {
-					Object.defineProperty(traps, property, Object.getOwnPropertyDescriptor(levelTraps, property));
+				if(!handler.hasOwnProperty(property)) {
+					Object.defineProperty(handler, property, Object.getOwnPropertyDescriptor(levelTraps, property));
 				}
 			});
 		});
 
-		return new Proxy(target, traps)
+		return new Proxy(target, handler)
 	}
 
-	/**
-		Creates factory for generation Proxies
-
-		@param { String | String[] } trapChain
-		@param { Object } [target = {}] can be used to extend the later proxy target
-	*/
-
-	function proxyFactory(trapChain, target = {}) {
-		if(!Array.isArray(trapChain)) {
-			trapChain = [trapChain];
-		}
-
-		let _traps = [];
+	function proxyFactory(...trapChain) {
+		let traps = [];
 
 		trapChain.forEach(function(factory) {
-			if(factory.target) {
-				Object.assign(target, factory.target);
-			}
 			if(factory.traps) {
-				_traps.push(...factory.traps);
+				traps.push(...factory.traps);
 			} else {
-				_traps.push(factory);
+				traps.push(factory);
 			}
 		});
 
 		let factory = createProxy.bind({
-			traps : _traps,
-			target
+			traps : traps
 		});
 
-		factory.target = target;
-		factory.traps = _traps;
+		factory.traps = traps;
 
 		return factory;
 	}
 
 	const traps = Object.freeze({
 		set(target, property, value) {
-			return target.stack[0][property] = value;
+			return Reflect.set(this.stack[0], property, value);
 		},
 		get(target, property) {
-			var host = target.findHost(property);
+			var host = this.findHost(property);
 
 			if(host) {
 				return host[property];
 			}
 		},
 		getOwnPropertyDescriptor(target, property, receiver) {
-			var host = target.findHost(property);
+			var host = this.findHost(property);
 
 			if(host) {
 				var desc = Object.getOwnPropertyDescriptor(host, property);
@@ -125,21 +75,20 @@
 		ownKeys(target) {
 			let set = new Set();
 
-			target.stack.forEach(function(level) {
+			this.stack.forEach(function(level) {
 					Reflect.ownKeys(level).forEach(set.add, set);
 			});
 
 			return Array.from(set);
 		},
-		has(target, property) { return target.findHost(property); }
-	});
+		has(target, property) {
+			return this.findHost(property);
+		},
 
-	const target = {
 		/**
 		returns the first object in stack that has the property
 		if none matches and root is set the top of the stack will be returned
 		*/
-
 		findHost(property, root) {
 			let host = this.stack.find(function(level) {
 				return property in level;
@@ -153,29 +102,29 @@
 				return this.stack[0];
 			}
 		}
-	};
+	});
 
-	const factory = proxyFactory(traps, target);
+	const factory = proxyFactory(traps);
 
 	const traps$1 = Object.freeze({
-		set(target$$1, property, value) {
-			return Reflect.set(target$$1.findHost(property, true), property, value);
+		set(target, property, value) {
+			return Reflect.set(this.findHost(property, true), property, value);
 		},
-		defineProperty(target$$1, property, descriptor) {
-			return Reflect.defineProperty(target$$1.findHost(property, true), property, descriptor);
+		defineProperty(target, property, descriptor) {
+			return Reflect.defineProperty(this.findHost(property, true), property, descriptor);
 		},
-		deleteProperty(target$$1, property) {
-			return Reflect.deleteProperty(target$$1.findHost(property, true), property);
+		deleteProperty(target, property) {
+			return Reflect.deleteProperty(this.findHost(property, true), property);
 		}
 	});
 
-	const factory$1 = proxyFactory([traps$1, factory]);
+	const factory$1 = proxyFactory(traps$1, factory);
 
 	const objectToString = Object.prototype.toString;
 
 	const traps$2 = {
-		get(target$$1, property) {
-			var hosts = target$$1.findAllHosts(property);
+		get(target, property) {
+			var hosts = this.findAllHosts(property);
 
 			switch(hosts.length) {
 				case 0:
@@ -201,11 +150,8 @@
 				stack.push(value);
 			}
 
-			return target$$1.factory(stack);
-		}
-	};
-
-	const target$1 = {
+			return this.factory(stack);
+		},
 		/**
 			returns all objects in stack that have the property
 			if none matches and root is set the top of the stack will be pushed
@@ -223,16 +169,11 @@
 		}
 	};
 
-	const factory$2 = target$1.factory = proxyFactory([traps$2, factory], target$1);
-
-	Object.freeze(traps$2);
+	const factory$2 = traps$2.factory = proxyFactory(traps$2, factory);
 
 	const traps$3 = {};
-	const target$2 = {};
 
-	const factory$3 = target$2.factory = proxyFactory([traps$3, traps$1, factory$2], target$2);
-
-	Object.freeze(traps$3);
+	const factory$3 = traps$3.factory = proxyFactory(traps$3, traps$1, factory$2);
 
 	exports.default = proxyFactory;
 	exports.read = factory;

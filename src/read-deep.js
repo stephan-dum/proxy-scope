@@ -5,7 +5,7 @@ const objectToString = Object.prototype.toString;
 
 const traps = {
 	get(target, property) {
-		var hosts = target.findAllHosts(property);
+		var hosts = this.findAllHosts(property);
 
 		switch(hosts.length) {
 			case 0:
@@ -31,11 +31,8 @@ const traps = {
 			stack.push(value);
 		}
 
-		return target.factory(stack);
-	}
-};
-
-const target = {
+		return this.factory(stack);
+	},
 	/**
 		returns all objects in stack that have the property
 		if none matches and root is set the top of the stack will be pushed
@@ -53,12 +50,9 @@ const target = {
 	}
 };
 
-const factory = target.factory = proxyFactory([traps, proxyRead], target);
-
-Object.freeze(traps);
+const factory = traps.factory = proxyFactory(traps, proxyRead);
 
 export {
 	factory as default,
-	target,
 	traps
 }
