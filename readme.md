@@ -1,5 +1,6 @@
 # ProxyScope
 
+<<<<<<< HEAD
 Bootstrap for combining object be reference with ES proxy, and reusing them on other proxy-factories. Which will also reflect changes made to the original objects. Proxies can also be useful when using immutables or mixins.
 
 > Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
@@ -41,6 +42,15 @@ Bootstrap for combining object be reference with ES proxy, and reusing them on o
   }
 
 ### proxyFactory(`Array<traps | factory> | traps | factory`, `Object target`)
+=======
+A way to aggregate objects by referances which will also reflect changes made to the original objects. This is usefull when using immutables or mixins.
+
+
+> Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
+
+
+### ProxyFactory(`Array<traps | factory> | traps | factory`, ...`Object target`)
+>>>>>>> origin/master
 `traps` chain of traps merged for the new Proxy
 
 `target` this will extended the proxy target created later on
@@ -139,7 +149,11 @@ expect(l2.fu).to.equal("hallo");
 ```
 
 ## ProxyScope.readDeep
+<<<<<<< HEAD
   read even nested objects, extends proxy-read by returning a new proxy for every property that has multiple possible getters
+=======
+  read even nested objects
+>>>>>>> origin/master
 
 > Use wisely, because this will create a proxy for every property lookup that has more then one possible value. Therefor it is recommended to cache lookups when possible.
 

@@ -60,6 +60,10 @@
 		return new Proxy(target, traps)
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	/**
 		Creates factory for generation Proxies
 
@@ -74,6 +78,7 @@
 
 		let _traps = [];
 
+<<<<<<< HEAD
 		trapChain.forEach(function(factory) {
 			if(factory.target) {
 				Object.assign(target, factory.target);
@@ -82,6 +87,16 @@
 				_traps.push(...factory.traps);
 			} else {
 				_traps.push(factory);
+=======
+		trapChain.forEach(function(traps) {
+			if(traps.target) {
+				Object.assign(target, traps.target);
+			}
+			if(traps.traps) {
+				_traps.push(...traps.traps);
+			} else {
+				_traps.push(traps);
+>>>>>>> origin/master
 			}
 		});
 
@@ -243,3 +258,7 @@
 	Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
+<<<<<<< HEAD
+=======
+//# sourceMappingURL=index.js.map
+>>>>>>> origin/master
