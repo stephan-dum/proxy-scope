@@ -1,6 +1,5 @@
 {
   "name": "@aboutweb/proxyscope",
-<<<<<<< HEAD
   "umd" : {
     "name" : "proxyScope",
     "exports" : "named"
@@ -27,32 +26,10 @@
     "ES6",
     "factory",
     "Bootstrap"
-=======
-  "version": "2.0.1",
-  "description": "combine objects by reference",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "scripts": {
-    "test": "node ./bin/build.js -t",
-    "build": "node ./bin/build.js",
-    "watch": "node ./bin/build.js -w"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stephan-dum/proxyscope.git"
-  },
-  "keywords": [
-    "proxy",
-    "immutable",
-    "variable",
-    "scope",
-    "ES6"
->>>>>>> origin/master
   ],
   "author": "Stephan Dum",
   "license": "ISC",
   "bugs": {
-<<<<<<< HEAD
     "url": "https://github.com/stephan-dum/proxy-scope/issues"
   },
   "homepage": "https://github.com/stephan-dum/proxy-scope#readme",
@@ -60,15 +37,5 @@
     "irrigable-packagejson" : "^0.0.3",
     "chai": "^4.2.0",
     "mocha": "^5.0.5"
-=======
-    "url": "https://github.com/stephan-dum/proxyscope/issues"
-  },
-  "homepage": "https://github.com/stephan-dum/proxyscope#readme",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "chokidar": "^2.0.4",
-    "mocha": "^5.0.5",
-    "rollup": "^0.57.1"
->>>>>>> origin/master
   }
 }
