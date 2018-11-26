@@ -7,7 +7,7 @@ function createProxy(stack, ...trapChain) {
 	let target = stack[0];
 	let handler = { stack };
 
-	trapChain.push(...this.traps);
+	trapChain.unshift(...this.traps);
 
 	trapChain.forEach(function(levelTraps) {
 		Object.getOwnPropertyNames(levelTraps).forEach(function(property) {
