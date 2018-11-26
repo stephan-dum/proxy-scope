@@ -1,0 +1,41 @@
+{
+  "name": "@aboutweb/proxyscope",
+  "umd" : {
+    "name" : "proxyScope",
+    "exports" : "named"
+  },
+  "version": "2.0.3",
+  "description": "Bootstrap for combining object be reference with ES proxy, and reusing them on other proxy-factories.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "inputs": "./index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "irrigable-packagejson -t",
+    "watch": "npm run build -- -w='./test/*'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephan-dum/proxy-scope.git"
+  },
+  "keywords": [
+    "proxy",
+    "es-proxy",
+    "proxy-scope",
+    "immutable",
+    "ES6",
+    "factory",
+    "Bootstrap"
+  ],
+  "author": "Stephan Dum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephan-dum/proxy-scope/issues"
+  },
+  "homepage": "https://github.com/stephan-dum/proxy-scope#readme",
+  "devDependencies": {
+    "irrigable-packagejson" : "^0.0.3",
+    "chai": "^4.2.0",
+    "mocha": "^5.0.5"
+  }
+}
