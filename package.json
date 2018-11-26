@@ -34,11 +34,8 @@
   },
   "homepage": "https://github.com/stephan-dum/proxy-scope#readme",
   "devDependencies": {
-    "@aboutweb/irrigable-packagejson": "^0.0.3",
+    "@aboutweb/irrigable-packagejson": "^0.0.6",
     "chai": "^4.2.0",
     "mocha": "^5.0.5"
-  },
-  "dependencies": {
-    "@aboutweb/irrigable": "0.0.3"
   }
 }
