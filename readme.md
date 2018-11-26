@@ -11,35 +11,6 @@ Bootstrap for combining object be reference with ES proxy, and reusing them on o
 
 ## API
 
-```javascript
-
-
-  interface traps {/*ES proxy traps*/}
-
-  interface target {
-    stack[] : object
-  }
-
-  interface trapChain {
-    [traps | factory] | traps | factory,
-  }
-
-  interface factory {
-    (
-      target : target | Array<object>,
-      trapChain : trapChain
-    ) : Proxy,
-    traps? : traps,
-    target? : object
-  }
-
-  exports default interface createFactory {
-    (
-      trapChain : trapChain,
-      target : object
-    ) : factory
-  }
-
 ### proxyFactory(`Array<traps | factory> | traps | factory`, `Object target`)
 `traps` chain of traps merged for the new Proxy
 
