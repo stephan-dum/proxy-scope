@@ -4,7 +4,7 @@
     "name" : "proxyScope",
     "exports" : "named"
   },
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Bootstrap for combining object be reference with ES proxy, and reusing them on other proxy-factories.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
