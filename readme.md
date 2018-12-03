@@ -8,9 +8,6 @@ Bootstrap for combining object be reference with ES proxy, and reusing them on o
 
 `npm i @aboutweb/proxyscope`
 
-> Caution this method uses [Proxies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) and therefor will only work in modern enviroments. Please view [CanIUse](https://caniuse.com/#feat=proxy) for more information.
-
-
 ### ProxyFactory(`...(traps || factory))
 `traps` chain of traps merged for the new Proxy
 
